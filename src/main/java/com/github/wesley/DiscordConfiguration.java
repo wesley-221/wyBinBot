@@ -4,6 +4,7 @@ import com.github.wesley.helper.Log;
 import com.github.wesley.helper.RegisterListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.Permissions;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
@@ -58,7 +59,7 @@ public class DiscordConfiguration {
         }
 
         Log.info("Successfully initialized");
-        Log.info("Discord invite link: " + discordApi.createBotInvite(Permissions.fromBitmask(201326592)));
+        Log.info("Discord invite link: " + discordApi.createBotInvite(Permissions.fromBitmask(469762048)));
     }
 
     private void createSlashCommands() {
@@ -66,6 +67,13 @@ public class DiscordConfiguration {
                         List.of(
                                 SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you registered for a wyBin tournament", true)
                         ))
+                .setEnabledInDms(false)
+                .createGlobal(discordApi)
+                .join();
+
+        SlashCommand.with("setupstreamrole", "Creates a role that people can opt-in to to get a ping for when the livestream goes live.")
+                .setEnabledInDms(false)
+                .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
                 .createGlobal(discordApi)
                 .join();
     }

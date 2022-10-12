@@ -55,6 +55,7 @@ public class CommandListener implements MessageCreateListener, RegisterListener 
                             new PermissionsBuilder()
                                     .setAllowed(PermissionType.CHANGE_NICKNAME)
                                     .setAllowed(PermissionType.MANAGE_NICKNAMES)
+                                    .setAllowed(PermissionType.MANAGE_ROLES)
                                     .build());
 
             String embedDescription = "**Add " + botName + " to your Discord guild:** \n" +
