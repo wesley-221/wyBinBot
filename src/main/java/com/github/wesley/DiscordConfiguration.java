@@ -68,6 +68,7 @@ public class DiscordConfiguration {
                                 SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you registered for a wyBin tournament", true)
                         ))
                 .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
                 .createGlobal(discordApi)
                 .join();
 
