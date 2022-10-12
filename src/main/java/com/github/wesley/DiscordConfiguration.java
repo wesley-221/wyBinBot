@@ -63,6 +63,16 @@ public class DiscordConfiguration {
     }
 
     private void createSlashCommands() {
+        discordApi.getGlobalSlashCommands().whenComplete((slashCommands, throwable) -> {
+            slashCommands.forEach(slashCommand -> {
+                if (slashCommand.getName().equals("register")) {
+                    slashCommand
+                            .createSlashCommandUpdater()
+                            .setDefaultEnabledForEveryone();
+                }
+            });
+        });
+
         SlashCommand.with("register", "Finalize your registration for the wyBin tournament",
                         List.of(
                                 SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you registered for a wyBin tournament", true)
