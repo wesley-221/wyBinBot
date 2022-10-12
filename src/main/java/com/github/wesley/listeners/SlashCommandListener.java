@@ -85,7 +85,6 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
                             .get()
                             .createRoleBuilder()
                             .setName(WATCHER_ROLE_NAME)
-                            .setMentionable(true)
                             .create()
                             .whenComplete((role, throwable) -> {
                                 if (throwable != null) {
