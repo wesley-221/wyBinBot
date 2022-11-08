@@ -59,13 +59,22 @@ public class DiscordConfiguration {
         }
 
         Log.info("Successfully initialized");
-        Log.info("Discord invite link: " + discordApi.createBotInvite(Permissions.fromBitmask(469762048)));
+        Log.info("Discord invite link: " + discordApi.createBotInvite(Permissions.fromBitmask(469762064)));
     }
 
     private void createSlashCommands() {
         SlashCommand.with("register", "Finalize your registration for the wyBin tournament",
                         List.of(
                                 SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you registered for a wyBin tournament", true)
+                        ))
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
+        SlashCommand.with("team", "Create or update your team in this server.",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you created a team for a wyBin tournament", true)
                         ))
                 .setEnabledInDms(false)
                 .setDefaultEnabledForEveryone()

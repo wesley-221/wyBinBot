@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface TournamentTeamMemberRepository extends JpaRepository<TournamentTeamMember, Integer> {
-    TournamentTeamMember getByDiscordSecret(String discordSecret);
+    TournamentTeamMember getByDiscordSecret(String secret);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Transactional
-    @Query(value = "UPDATE TournamentTeamMember SET discordId = :discordId, discordSecret = NULL WHERE id = :teamMemberId")
+    @Query(value = "UPDATE TournamentTeamMember SET discordId = :discordId WHERE id = :teamMemberId")
     void updateDiscordIdAndResetSecret(Long teamMemberId, String discordId);
 }
