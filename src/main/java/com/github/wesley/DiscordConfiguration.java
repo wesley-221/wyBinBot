@@ -5,7 +5,7 @@ import com.github.wesley.helper.RegisterListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.permission.PermissionType;
-import org.javacord.api.entity.permission.Permissions;
+import org.javacord.api.entity.permission.PermissionsBuilder;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
 import org.javacord.api.interaction.SlashCommandOptionType;
@@ -59,7 +59,10 @@ public class DiscordConfiguration {
         }
 
         Log.info("Successfully initialized");
-        Log.info("Discord invite link: " + discordApi.createBotInvite(Permissions.fromBitmask(469762064)));
+        Log.info("Discord invite link: " + discordApi.createBotInvite(
+                new PermissionsBuilder()
+                        .setAllowed(PermissionType.ADMINISTRATOR)
+                        .build()));
     }
 
     private void createSlashCommands() {

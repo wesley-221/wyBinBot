@@ -221,7 +221,7 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
 
                                                 interaction
                                                         .createImmediateResponder()
-                                                        .setContent("Successfully created the role, text and voice channel for your team!")
+                                                        .setContent("Successfully created the role, text and voice channel for your team!\n\n**Note:** You have to refresh the wyBin website in order for the Discord step to show up as completed.")
                                                         .setFlags(MessageFlag.EPHEMERAL)
                                                         .respond();
                                             });
