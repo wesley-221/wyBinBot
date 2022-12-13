@@ -3,12 +3,15 @@ package com.github.wesley.listeners;
 import com.github.wesley.helper.RegisterListener;
 import com.github.wesley.models.TournamentTeam;
 import com.github.wesley.models.TournamentTeamMember;
+import com.github.wesley.models.User;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
+import com.github.wesley.repositories.UserRepository;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
 import org.javacord.api.entity.permission.Role;
@@ -28,13 +31,15 @@ import java.util.Optional;
 public class SlashCommandListener implements SlashCommandCreateListener, RegisterListener {
     private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
     private final TournamentTeamRepository tournamentTeamRepository;
+    private final UserRepository userRepository;
 
     public final static String WATCHER_ROLE_NAME = "Watcher";
 
     @Autowired
-    public SlashCommandListener(TournamentTeamMemberRepository tournamentTeamMemberRepository, TournamentTeamRepository tournamentTeamRepository) {
+    public SlashCommandListener(TournamentTeamMemberRepository tournamentTeamMemberRepository, TournamentTeamRepository tournamentTeamRepository, UserRepository userRepository) {
         this.tournamentTeamMemberRepository = tournamentTeamMemberRepository;
         this.tournamentTeamRepository = tournamentTeamRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -42,6 +47,9 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
         SlashCommandInteraction interaction = event.getSlashCommandInteraction();
         String commandName = interaction.getCommandName();
 
+        //
+        // /register command
+        //
         if (commandName.equals("register")) {
             SlashCommandInteractionOption interactionOption = interaction.getArguments().get(0);
             Optional<String> secret = interactionOption.getStringValue();
@@ -78,6 +86,9 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
             }
         }
 
+        //
+        // /setupstreamrole command
+        //
         if (commandName.equals("setupstreamrole")) {
             Optional<Server> server = event
                     .getSlashCommandInteraction()
@@ -134,6 +145,9 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
             }
         }
 
+        //
+        // /team command
+        //
         if (commandName.equals("team")) {
             SlashCommandInteractionOption interactionOption = interaction.getArguments().get(0);
             Optional<String> secret = interactionOption.getStringValue();
@@ -235,6 +249,60 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
                         .setFlags(MessageFlag.EPHEMERAL)
                         .respond();
             }
+        }
+
+        //
+        // /verify command
+        //
+        if (commandName.equals("verify")) {
+            SlashCommandInteractionOption interactionOption = interaction.getArguments().get(0);
+            Optional<String> secret = interactionOption.getStringValue();
+
+            if (secret.isPresent()) {
+                User user = userRepository.getByDiscordSecret(secret.get());
+
+                if (user == null) {
+                    interaction
+                            .createImmediateResponder()
+                            .setContent("Unable to verify who you are. The secret you entered was invalid.")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond();
+
+                    return;
+                }
+
+                interaction
+                        .getUser()
+                        .updateNickname(interaction.getServer().get(), user.getUsername())
+                        .whenComplete((unused, throwable) -> interaction
+                                .createImmediateResponder()
+                                .setContent("You have successfully verified who you are! Your username has been changed to " + user.getUsername() + ".")
+                                .setFlags(MessageFlag.EPHEMERAL)
+                                .respond());
+            } else {
+                interaction
+                        .createImmediateResponder()
+                        .setContent("Unable to verify who you are. The secret you entered was invalid.")
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .respond();
+            }
+        }
+
+        //
+        // /howtoverify command
+        //
+        if (commandName.equals("howtoverify")) {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle("How to verify yourself")
+                    .setColor(Color.GREEN)
+                    .setDescription("Verifying yourself is pretty straight forward. First go to https://wybin.xyz/osu-dashboard/discord-verify and login if you aren't logged in already.\n\n" +
+                            "Once you are logged in, a Discord secret will be shown, copy this Discord secret.\n" +
+                            "Now run the command `/verify` in any channel where you are able to type (and press enter, so a small box with `secret` shows up).\n\n" +
+                            "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!");
+            interaction
+                    .createImmediateResponder()
+                    .addEmbed(embed)
+                    .respond();
         }
     }
 }

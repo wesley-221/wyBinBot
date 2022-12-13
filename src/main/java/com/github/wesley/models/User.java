@@ -16,4 +16,5 @@ public class User {
     private Long id;
     private String slug;
     private String username;
+    private String discordSecret;
 }

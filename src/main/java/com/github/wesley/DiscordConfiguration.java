@@ -84,6 +84,21 @@ public class DiscordConfiguration {
                 .createGlobal(discordApi)
                 .join();
 
+        SlashCommand.with("verify", "Verify who you are by changing your name to your osu! username.",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you on wyBin Discord verify", true)
+                        ))
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
+        SlashCommand.with("howtoverify", "Shows a description on how to verify yourself for this Discord server.")
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
         SlashCommand.with("setupstreamrole", "Creates a role that people can opt-in to to get a ping for when the livestream goes live.")
                 .setEnabledInDms(false)
                 .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
