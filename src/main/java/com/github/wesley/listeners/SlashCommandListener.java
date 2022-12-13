@@ -1,9 +1,11 @@
 package com.github.wesley.listeners;
 
 import com.github.wesley.helper.RegisterListener;
+import com.github.wesley.models.TournamentStaff;
 import com.github.wesley.models.TournamentTeam;
 import com.github.wesley.models.TournamentTeamMember;
 import com.github.wesley.models.User;
+import com.github.wesley.repositories.TournamentStaffRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
 import com.github.wesley.repositories.UserRepository;
@@ -31,14 +33,16 @@ import java.util.Optional;
 public class SlashCommandListener implements SlashCommandCreateListener, RegisterListener {
     private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
     private final TournamentTeamRepository tournamentTeamRepository;
+    private final TournamentStaffRepository tournamentStaffRepository;
     private final UserRepository userRepository;
 
     public final static String WATCHER_ROLE_NAME = "Watcher";
 
     @Autowired
-    public SlashCommandListener(TournamentTeamMemberRepository tournamentTeamMemberRepository, TournamentTeamRepository tournamentTeamRepository, UserRepository userRepository) {
+    public SlashCommandListener(TournamentTeamMemberRepository tournamentTeamMemberRepository, TournamentTeamRepository tournamentTeamRepository, TournamentStaffRepository tournamentStaffRepository, UserRepository userRepository) {
         this.tournamentTeamMemberRepository = tournamentTeamMemberRepository;
         this.tournamentTeamRepository = tournamentTeamRepository;
+        this.tournamentStaffRepository = tournamentStaffRepository;
         this.userRepository = userRepository;
     }
 
@@ -298,6 +302,65 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
                     .setDescription("Verifying yourself is pretty straight forward. First go to https://wybin.xyz/osu-dashboard/discord-verify and login if you aren't logged in already.\n\n" +
                             "Once you are logged in, a Discord secret will be shown, copy this Discord secret.\n" +
                             "Now run the command `/verify` in any channel where you are able to type (and press enter, so a small box with `secret` shows up).\n\n" +
+                            "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!");
+            interaction
+                    .createImmediateResponder()
+                    .addEmbed(embed)
+                    .respond();
+        }
+
+        //
+        // /staffverify command
+        //
+        if (commandName.equals("staffverify")) {
+            SlashCommandInteractionOption interactionOption = interaction.getArguments().get(0);
+            Optional<String> secret = interactionOption.getStringValue();
+
+            if (secret.isPresent()) {
+                TournamentStaff tournamentStaff = tournamentStaffRepository.getByDiscordSecret(secret.get());
+
+                if (tournamentStaff == null) {
+                    interaction
+                            .createImmediateResponder()
+                            .setContent("Unable to verify who you are. The secret you entered was invalid.")
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .respond();
+
+                    return;
+                }
+
+                tournamentStaffRepository.updateDiscordId(tournamentStaff.getId(), String.valueOf(interaction.getUser().getId()));
+
+                interaction
+                        .getUser()
+                        .updateNickname(interaction.getServer().get(), tournamentStaff.getUser().getUsername())
+                        .whenComplete((unused, throwable) -> interaction
+                                .createImmediateResponder()
+                                .setContent("You have successfully verified who you are! Your username has been changed to " + tournamentStaff.getUser().getUsername() + ".")
+                                .setFlags(MessageFlag.EPHEMERAL)
+                                .respond());
+            } else {
+                interaction
+                        .createImmediateResponder()
+                        .setContent("Unable to verify who you are. The secret you entered was invalid.")
+                        .setFlags(MessageFlag.EPHEMERAL)
+                        .respond();
+            }
+        }
+
+        //
+        // /howtostaffverify command
+        //
+        if (commandName.equals("howtostaffverify")) {
+            SlashCommandInteractionOption interactionOption = interaction.getArguments().get(0);
+            Optional<String> url = interactionOption.getStringValue();
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle("How to verify yourself as a staff member")
+                    .setColor(Color.GREEN)
+                    .setDescription("Verifying yourself is pretty straight forward. First go to " + url.get() + " and login if you aren't logged in already.\n\n" +
+                            "Once you are logged in, a box with `Discord verification` will show up on top of the page. Click on it to show the Discord secret, after that copy this Discord secret.\n" +
+                            "Now run the command `/staffverify` in any channel where you are able to type (and press enter, so a small box with `secret` shows up).\n\n" +
                             "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!");
             interaction
                     .createImmediateResponder()

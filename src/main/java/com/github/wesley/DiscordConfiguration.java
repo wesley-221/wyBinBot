@@ -75,6 +75,24 @@ public class DiscordConfiguration {
                 .createGlobal(discordApi)
                 .join();
 
+        SlashCommand.with("staffverify", "Verify yourself as staff for the wyBin tournament",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you on the staff page on the wyBin tournament", true)
+                        ))
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
+        SlashCommand.with("howtostaffverify", "Shows a description on how to verify yourself as a staff member for this Discord server.",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "websitelink", "The url to the staff page of the tournament", true)
+                        ))
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
         SlashCommand.with("team", "Create or update your team in this server.",
                         List.of(
                                 SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you created a team for a wyBin tournament", true)
