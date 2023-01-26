@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -365,6 +367,49 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
             interaction
                     .createImmediateResponder()
                     .addEmbed(embed)
+                    .respond();
+        }
+
+        //
+        // /timestamp command
+        //
+        if (commandName.equals("timestamp")) {
+            SlashCommandInteractionOption interactionOption = interaction.getArguments().get(0);
+            Optional<String> time = interactionOption.getStringValue();
+
+            LocalTime localTime = LocalTime.parse(time.get());
+
+            Calendar now = Calendar.getInstance();
+            now.set(Calendar.HOUR_OF_DAY, localTime.getHour());
+            now.set(Calendar.MINUTE, localTime.getMinute());
+            now.set(Calendar.SECOND, 0);
+            now.set(Calendar.MILLISECOND, 0);
+
+            StringBuilder finalString = new StringBuilder();
+
+            finalString.append("**Timestamps for the upcoming 10 days for ")
+                    .append(localTime)
+                    .append(" UTC+0**\n\r");
+
+            for (int i = 0; i < 10; i++) {
+                finalString
+                        .append("<t:")
+                        .append(now.getTimeInMillis() / 1000L)
+                        .append(">: ")
+                        .append("`<t:")
+                        .append(now.getTimeInMillis() / 1000L)
+                        .append("> (")
+                        .append("<t:")
+                        .append(now.getTimeInMillis() / 1000L)
+                        .append(":R>)`")
+                        .append("\n");
+
+                now.add(Calendar.DATE, 1);
+            }
+
+            interaction
+                    .createImmediateResponder()
+                    .setContent(finalString.toString())
                     .respond();
         }
     }

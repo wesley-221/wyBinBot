@@ -122,5 +122,14 @@ public class DiscordConfiguration {
                 .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
                 .createGlobal(discordApi)
                 .join();
+
+        SlashCommand.with("timestamp", "Creates a list with timestamps for the given time",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "time", "The time used for the timestamp. Format: 01:00, 12:00, 17:00, 20:30, etc.", true)
+                        ))
+                .setEnabledInDms(true)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
     }
 }
