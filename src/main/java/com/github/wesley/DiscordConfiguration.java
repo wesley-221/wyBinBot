@@ -66,38 +66,8 @@ public class DiscordConfiguration {
     }
 
     private void createSlashCommands() {
-        SlashCommand.with("register", "Finalize your registration for the wyBin tournament",
-                        List.of(
-                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you registered for a wyBin tournament", true)
-                        ))
-                .setEnabledInDms(false)
-                .setDefaultEnabledForEveryone()
-                .createGlobal(discordApi)
-                .join();
-
-        SlashCommand.with("staffverify", "Verify yourself as staff for the wyBin tournament",
-                        List.of(
-                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you on the staff page on the wyBin tournament", true)
-                        ))
-                .setEnabledInDms(false)
-                .setDefaultEnabledForEveryone()
-                .createGlobal(discordApi)
-                .join();
-
-        SlashCommand.with("howtostaffverify", "Shows a description on how to verify yourself as a staff member for this Discord server.",
-                        List.of(
-                                SlashCommandOption.create(SlashCommandOptionType.STRING, "websitelink", "The url to the staff page of the tournament", true)
-                        ))
-                .setEnabledInDms(false)
-                .setDefaultEnabledForEveryone()
-                .createGlobal(discordApi)
-                .join();
-
-        SlashCommand.with("team", "Create or update your team in this server.",
-                        List.of(
-                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you when you created a team for a wyBin tournament", true)
-                        ))
-                .setEnabledInDms(false)
+        SlashCommand.with("invite", "Sends a message with the invite link of this bot.")
+                .setEnabledInDms(true)
                 .setDefaultEnabledForEveryone()
                 .createGlobal(discordApi)
                 .join();
@@ -112,6 +82,15 @@ public class DiscordConfiguration {
                 .join();
 
         SlashCommand.with("howtoverify", "Shows a description on how to verify yourself for this Discord server.")
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
+        SlashCommand.with("howtostaffverify", "Shows a description on how to verify yourself as a staff member for this Discord server.",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "websitelink", "The url to the staff page of the tournament", true)
+                        ))
                 .setEnabledInDms(false)
                 .setDefaultEnabledForEveryone()
                 .createGlobal(discordApi)

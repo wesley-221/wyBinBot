@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_ROLE_NAME;
+
 @Component
 public class ButtonClickListener implements org.javacord.api.listener.interaction.ButtonClickListener, RegisterListener {
     @Override
@@ -19,7 +21,7 @@ public class ButtonClickListener implements org.javacord.api.listener.interactio
             buttonInteraction
                     .getServer()
                     .ifPresent(server -> {
-                        List<Role> roleList = server.getRolesByName(SlashCommandListener.WATCHER_ROLE_NAME);
+                        List<Role> roleList = server.getRolesByName(WATCHER_ROLE_NAME);
 
                         if (roleList.size() > 0) {
                             roleList
@@ -38,7 +40,7 @@ public class ButtonClickListener implements org.javacord.api.listener.interactio
             buttonInteraction
                     .getServer()
                     .ifPresent(server -> {
-                        List<Role> roleList = server.getRolesByName(SlashCommandListener.WATCHER_ROLE_NAME);
+                        List<Role> roleList = server.getRolesByName(WATCHER_ROLE_NAME);
 
                         if (roleList.size() > 0) {
                             roleList
