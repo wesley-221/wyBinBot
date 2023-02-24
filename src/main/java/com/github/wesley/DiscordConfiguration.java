@@ -110,5 +110,11 @@ public class DiscordConfiguration {
                 .setDefaultEnabledForEveryone()
                 .createGlobal(discordApi)
                 .join();
+
+        SlashCommand.with("webhooks", "Creates several channels with webhooks used for both wyReferee and wyBin.")
+                .setEnabledInDms(false)
+                .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
+                .createGlobal(discordApi)
+                .join();
     }
 }
