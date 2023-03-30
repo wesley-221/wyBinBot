@@ -26,6 +26,8 @@ public class VerifyCommand extends Command {
     public static final String STAFF_PREFIX = "staff";
     public static final String VERIFY_PREFIX = "verify";
 
+    public static final String PLAYER_ROLE = "Player";
+
     private final TournamentTeamRepository tournamentTeamRepository;
     private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
     private final TournamentStaffRepository tournamentStaffRepository;
@@ -150,16 +152,60 @@ public class VerifyCommand extends Command {
                     return;
                 }
 
-                tournamentTeamMemberRepository.updateDiscordIdAndResetSecret(tournamentTeamMember.getId(), String.valueOf(interaction.getUser().getId()));
+                Optional<Server> server = interaction.getServer();
 
-                interaction
-                        .getUser()
-                        .updateNickname(interaction.getServer().get(), tournamentTeamMember.getUser().getUsername())
-                        .whenComplete((unused, throwable) -> interaction
-                                .createImmediateResponder()
-                                .setContent("You have successfully finalized your registration! Welcome " + tournamentTeamMember.getUser().getUsername() + ". \n\n**Note:** You have to refresh the wyBin website in order for the Discord step to show up as completed.")
-                                .setFlags(MessageFlag.EPHEMERAL)
-                                .respond());
+                if (server.isPresent()) {
+                    List<Role> roleList = server
+                            .get()
+                            .getRolesByName(PLAYER_ROLE);
+
+                    tournamentTeamMemberRepository.updateDiscordIdAndResetSecret(tournamentTeamMember.getId(), String.valueOf(interaction.getUser().getId()));
+
+                    if (roleList.size() > 0) {
+                        Role role = roleList.get(0);
+
+                        interaction
+                                .getUser()
+                                .addRole(role);
+
+                        interaction
+                                .getUser()
+                                .updateNickname(interaction.getServer().get(), tournamentTeamMember.getUser().getUsername())
+                                .whenComplete((unused, throwable) -> interaction
+                                        .createImmediateResponder()
+                                        .setContent("You have successfully finalized your registration! Welcome " + tournamentTeamMember.getUser().getUsername() + ". \n\n**Note:** You have to refresh the wyBin website in order for the Discord step to show up as completed.")
+                                        .setFlags(MessageFlag.EPHEMERAL)
+                                        .respond());
+                    } else {
+                        // Create role
+                        server
+                                .get()
+                                .createRoleBuilder()
+                                .setName(PLAYER_ROLE)
+                                .setMentionable(false)
+                                .setDisplaySeparately(false)
+                                .setColor(new Color(96, 125, 136))
+                                .create()
+                                .whenComplete((role, roleThrowable) -> {
+                                    if (roleThrowable != null)
+                                        roleThrowable.printStackTrace();
+
+                                    // Add role to user
+                                    interaction
+                                            .getUser()
+                                            .addRole(role);
+
+                                    interaction
+                                            .getUser()
+                                            .updateNickname(interaction.getServer().get(), tournamentTeamMember.getUser().getUsername())
+                                            .whenComplete((unused, throwable) -> interaction
+                                                    .createImmediateResponder()
+                                                    .setContent("You have successfully finalized your registration! Welcome " + tournamentTeamMember.getUser().getUsername() + ". \n\n**Note:** You have to refresh the wyBin website in order for the Discord step to show up as completed.")
+                                                    .setFlags(MessageFlag.EPHEMERAL)
+                                                    .respond());
+                                });
+                    }
+                }
             } else if (secret.startsWith(STAFF_PREFIX + "-")) {
                 TournamentStaff tournamentStaff = tournamentStaffRepository.getByDiscordSecret(secret);
 
