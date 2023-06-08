@@ -33,11 +33,7 @@ public class DiscordConfiguration {
 
     @Bean
     public void startDiscordBot() {
-        this.discordApi = new DiscordApiBuilder()
-                .setToken(discordToken)
-                .setAllIntents()
-                .login()
-                .join();
+        this.discordApi = new DiscordApiBuilder().setToken(discordToken).setAllIntents().login().join();
 
         initialize();
     }
@@ -59,10 +55,7 @@ public class DiscordConfiguration {
         }
 
         Log.info("Successfully initialized");
-        Log.info("Discord invite link: " + discordApi.createBotInvite(
-                new PermissionsBuilder()
-                        .setAllowed(PermissionType.ADMINISTRATOR)
-                        .build()));
+        Log.info("Discord invite link: " + discordApi.createBotInvite(new PermissionsBuilder().setAllowed(PermissionType.ADMINISTRATOR).build()));
     }
 
     private void createSlashCommands() {
@@ -82,15 +75,6 @@ public class DiscordConfiguration {
                 .join();
 
         SlashCommand.with("howtoverify", "Shows a description on how to verify yourself for this Discord server.")
-                .setEnabledInDms(false)
-                .setDefaultEnabledForEveryone()
-                .createGlobal(discordApi)
-                .join();
-
-        SlashCommand.with("howtostaffverify", "Shows a description on how to verify yourself as a staff member for this Discord server.",
-                        List.of(
-                                SlashCommandOption.create(SlashCommandOptionType.STRING, "websitelink", "The url to the staff page of the tournament", true)
-                        ))
                 .setEnabledInDms(false)
                 .setDefaultEnabledForEveryone()
                 .createGlobal(discordApi)
