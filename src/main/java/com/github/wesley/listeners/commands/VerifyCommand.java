@@ -226,7 +226,7 @@ public class VerifyCommand extends Command {
                         .updateNickname(interaction.getServer().get(), tournamentStaff.getUser().getUsername())
                         .whenComplete((unused, throwable) -> interaction
                                 .createImmediateResponder()
-                                .setContent("You have successfully verified who you are! Your username has been changed to " + tournamentStaff.getUser().getUsername() + ".")
+                                .setContent("You have successfully verified who you are! Your username has been changed to " + tournamentStaff.getUser().getUsername() + ". \n\n**Note:** You have to refresh the wyBin website in order for the Discord step to show up as completed.")
                                 .setFlags(MessageFlag.EPHEMERAL)
                                 .respond());
             } else if (secret.startsWith(VERIFY_PREFIX + "-")) {
