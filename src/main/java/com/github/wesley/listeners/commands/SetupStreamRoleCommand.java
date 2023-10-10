@@ -49,10 +49,10 @@ public class SetupStreamRoleCommand extends Command {
             }
 
             new MessageBuilder()
-                    .setContent("Click to get or remove the Watcher role to get pinged whenever the livestream goes live.")
+                    .setContent("Click to get or remove the Watcher role. This role will be used to ping everyone whenever the livestream goes live.")
                     .addComponents(
                             ActionRow.of(
-                                    Button.success("giveRole", "Give Watcher role"),
+                                    Button.success("giveRole", "Get Watcher role"),
                                     Button.danger("removeRole", "Remove Watcher role")
                             )
                     )

@@ -100,5 +100,20 @@ public class DiscordConfiguration {
                 .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
                 .createGlobal(discordApi)
                 .join();
+
+        SlashCommand.with("playerroles", "Goes through all the verified players and gives them the Player role and update their username.",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "tournamentslug", "The slug of the tournament. Ex. `wybin.xyz/tournaments/axs-8th-edition/home` > `axs-8th-edition`", true)
+                        ))
+                .setEnabledInDms(false)
+                .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
+                .createGlobal(discordApi)
+                .join();
+
+//        SlashCommand.with("teamcolour", "Changes the colour of the role from your team.")
+//                .setEnabledInDms(false)
+//                .setDefaultEnabledForEveryone()
+//                .createGlobal(discordApi)
+//                .join();
     }
 }

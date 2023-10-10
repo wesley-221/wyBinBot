@@ -1,6 +1,6 @@
 package com.github.wesley.repositories;
 
-import com.github.wesley.models.TournamentTeam;
+import com.github.wesley.models.tournament.TournamentTeam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

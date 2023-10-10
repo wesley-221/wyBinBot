@@ -1,5 +1,6 @@
-package com.github.wesley.models;
+package com.github.wesley.models.tournament;
 
+import com.github.wesley.models.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

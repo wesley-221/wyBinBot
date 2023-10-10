@@ -1,6 +1,9 @@
 package com.github.wesley.listeners.commands;
 
 import com.github.wesley.models.*;
+import com.github.wesley.models.tournament.TournamentStaff;
+import com.github.wesley.models.tournament.TournamentTeam;
+import com.github.wesley.models.tournament.TournamentTeamMember;
 import com.github.wesley.repositories.TournamentStaffRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
