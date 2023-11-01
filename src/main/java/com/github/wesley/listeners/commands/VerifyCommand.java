@@ -1,6 +1,7 @@
 package com.github.wesley.listeners.commands;
 
-import com.github.wesley.models.*;
+import com.github.wesley.models.Command;
+import com.github.wesley.models.User;
 import com.github.wesley.models.tournament.TournamentStaff;
 import com.github.wesley.models.tournament.TournamentTeam;
 import com.github.wesley.models.tournament.TournamentTeamMember;
@@ -8,6 +9,7 @@ import com.github.wesley.repositories.TournamentStaffRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
 import com.github.wesley.repositories.UserRepository;
+import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
@@ -70,11 +72,16 @@ public class VerifyCommand extends Command {
                 Optional<Server> server = interaction.getServer();
 
                 if (server.isPresent()) {
-                    List<Role> roleList = server
+                    List<ChannelCategory> channelCategoryList = server
                             .get()
-                            .getRolesByName(team.getName());
+                            .getChannelCategoriesByName(team.getName());
 
-                    if (roleList.size() > 0) {
+                    // Category does exist, give them the role
+                    if (channelCategoryList.size() > 0) {
+                        List<Role> roleList = server
+                                .get()
+                                .getRolesByName(team.getName());
+
                         Role role = roleList.get(0);
 
                         interaction
@@ -86,8 +93,9 @@ public class VerifyCommand extends Command {
                                 .setContent("You have successfully been given the role for the team `" + role.getName() + "`.")
                                 .setFlags(MessageFlag.EPHEMERAL)
                                 .respond();
-                    } else {
-                        // Create role
+                    }
+                    // Category does not exist, create role + everything else
+                    else {
                         server
                                 .get()
                                 .createRoleBuilder()
