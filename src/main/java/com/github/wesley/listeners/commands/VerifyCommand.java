@@ -170,7 +170,7 @@ public class VerifyCommand extends Command {
                             .get()
                             .getRolesByName(PLAYER_ROLE);
 
-                    tournamentTeamMemberRepository.updateDiscordIdAndResetSecret(tournamentTeamMember.getId(), String.valueOf(interaction.getUser().getId()));
+                    tournamentTeamMemberRepository.updateDiscordId(tournamentTeamMember.getId(), String.valueOf(interaction.getUser().getId()));
 
                     if (roleList.size() > 0) {
                         Role role = roleList.get(0);
@@ -253,14 +253,55 @@ public class VerifyCommand extends Command {
                     return;
                 }
 
-                interaction
-                        .getUser()
-                        .updateNickname(interaction.getServer().get(), user.getUsername())
-                        .whenComplete((unused, throwable) -> interaction
-                                .createImmediateResponder()
-                                .setContent("You have successfully verified who you are! Your username has been changed to " + user.getUsername() + ".")
-                                .setFlags(MessageFlag.EPHEMERAL)
-                                .respond());
+                List<Role> roleList = interaction.getServer()
+                        .get()
+                        .getRolesByName(PLAYER_ROLE);
+
+                if (roleList.size() > 0) {
+                    Role role = roleList.get(0);
+
+                    interaction
+                            .getUser()
+                            .addRole(role);
+
+                    interaction
+                            .getUser()
+                            .updateNickname(interaction.getServer().get(), user.getUsername())
+                            .whenComplete((unused, throwable) -> interaction
+                                    .createImmediateResponder()
+                                    .setContent("You have successfully been verified! Your username has been changed to " + user.getUsername() + ".")
+                                    .setFlags(MessageFlag.EPHEMERAL)
+                                    .respond());
+                }
+                else {
+                    // Create role
+                    interaction.getServer()
+                            .get()
+                            .createRoleBuilder()
+                            .setName(PLAYER_ROLE)
+                            .setMentionable(false)
+                            .setDisplaySeparately(false)
+                            .setColor(new Color(96, 125, 136))
+                            .create()
+                            .whenComplete((role, roleThrowable) -> {
+                                if (roleThrowable != null)
+                                    roleThrowable.printStackTrace();
+
+                                // Add role to user
+                                interaction
+                                        .getUser()
+                                        .addRole(role);
+
+                                interaction
+                                        .getUser()
+                                        .updateNickname(interaction.getServer().get(), user.getUsername())
+                                        .whenComplete((unused, throwable) -> interaction
+                                                .createImmediateResponder()
+                                                .setContent("You have successfully been verified! Your username has been changed to " + user.getUsername() + ".")
+                                                .setFlags(MessageFlag.EPHEMERAL)
+                                                .respond());
+                            });
+                }
             }
         } else {
             interaction

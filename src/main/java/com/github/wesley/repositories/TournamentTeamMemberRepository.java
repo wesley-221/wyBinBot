@@ -14,7 +14,7 @@ public interface TournamentTeamMemberRepository extends JpaRepository<Tournament
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Transactional
     @Query(value = "UPDATE TournamentTeamMember SET discordId = :discordId WHERE id = :teamMemberId")
-    void updateDiscordIdAndResetSecret(Long teamMemberId, String discordId);
+    void updateDiscordId(Long teamMemberId, String discordId);
 
     @Query(value = "SELECT * FROM tournament_team_member WHERE tournament_id = :tournamentId", nativeQuery = true)
     List<TournamentTeamMember> getPlayersByTournamentId(Long tournamentId);
