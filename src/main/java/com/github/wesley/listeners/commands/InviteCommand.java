@@ -32,7 +32,11 @@ public class InviteCommand extends Command {
                 .getApi()
                 .createBotInvite(
                         new PermissionsBuilder()
-                                .setAllowed(PermissionType.ADMINISTRATOR)
+                                .setAllowed(PermissionType.MANAGE_CHANNELS)
+                                .setAllowed(PermissionType.MANAGE_ROLES)
+                                .setAllowed(PermissionType.MANAGE_WEBHOOKS)
+                                .setAllowed(PermissionType.CHANGE_NICKNAME)
+                                .setAllowed(PermissionType.MANAGE_NICKNAMES)
                                 .build());
 
         String embedDescription = "**Add " + botName + " to your Discord guild:** \n" +
