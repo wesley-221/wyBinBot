@@ -25,6 +25,9 @@ dependencies {
     }
     testImplementation 'org.springframework.security:spring-security-test'
 
+    // Spring boot webserver
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'

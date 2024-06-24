@@ -1,5 +1,7 @@
 logging.level.root=info
 
+server.port=8070
+
 discord.token=
 discord.command-prefix=!
 
