@@ -9,7 +9,6 @@ import com.github.wesley.repositories.TournamentStaffRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
 import com.github.wesley.repositories.UserRepository;
-import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
@@ -72,30 +71,8 @@ public class VerifyCommand extends Command {
                 Optional<Server> server = interaction.getServer();
 
                 if (server.isPresent()) {
-                    List<ChannelCategory> channelCategoryList = server
-                            .get()
-                            .getChannelCategoriesByName(team.getName());
-
-                    // Category does exist, give them the role
-                    if (channelCategoryList.size() > 0) {
-                        List<Role> roleList = server
-                                .get()
-                                .getRolesByName(team.getName());
-
-                        Role role = roleList.get(0);
-
-                        interaction
-                                .getUser()
-                                .addRole(role);
-
-                        interaction
-                                .createImmediateResponder()
-                                .setContent("You have successfully been given the role for the team `" + role.getName() + "`.")
-                                .setFlags(MessageFlag.EPHEMERAL)
-                                .respond();
-                    }
-                    // Category does not exist, create role + everything else
-                    else {
+                    // Discord team was not found, create the category, channel and role
+                    if (team.getDiscordId() == null || team.getDiscordId().length() <= 0) {
                         server
                                 .get()
                                 .createRoleBuilder()
@@ -148,6 +125,28 @@ public class VerifyCommand extends Command {
                                                         .respond();
                                             });
                                 });
+                    } else {
+                        Optional<Role> teamRole = server
+                                .get()
+                                .getRoleById(team.getDiscordId());
+
+                        if (teamRole.isPresent()) {
+                            interaction
+                                    .getUser()
+                                    .addRole(teamRole.get());
+
+                            interaction
+                                    .createImmediateResponder()
+                                    .setContent("You have successfully been given the role for the team `" + teamRole.get().getName() + "`.")
+                                    .setFlags(MessageFlag.EPHEMERAL)
+                                    .respond();
+                        } else {
+                            interaction
+                                    .createImmediateResponder()
+                                    .setContent("Unable to give you the team role.")
+                                    .setFlags(MessageFlag.EPHEMERAL)
+                                    .respond();
+                        }
                     }
                 }
             } else if (secret.startsWith(PLAYER_PREFIX + "-")) {
@@ -272,8 +271,7 @@ public class VerifyCommand extends Command {
                                     .setContent("You have successfully been verified! Your username has been changed to " + user.getUsername() + ".")
                                     .setFlags(MessageFlag.EPHEMERAL)
                                     .respond());
-                }
-                else {
+                } else {
                     // Create role
                     interaction.getServer()
                             .get()
