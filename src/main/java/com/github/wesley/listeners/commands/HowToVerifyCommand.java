@@ -1,6 +1,7 @@
 package com.github.wesley.listeners.commands;
 
 import com.github.wesley.models.Command;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ public class HowToVerifyCommand extends Command {
                         "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!");
         interaction
                 .createImmediateResponder()
+                .setFlags(MessageFlag.EPHEMERAL)
                 .addEmbed(embed)
                 .respond();
     }
