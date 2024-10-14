@@ -1,5 +1,6 @@
 package com.github.wesley.listeners.commands;
 
+import com.github.wesley.helper.Log;
 import com.github.wesley.models.Command;
 import com.github.wesley.models.User;
 import com.github.wesley.models.tournament.TournamentStaff;
@@ -176,7 +177,19 @@ public class VerifyCommand extends Command {
 
                         interaction
                                 .getUser()
-                                .addRole(role);
+                                .addRole(role)
+                                .whenComplete((unused, throwable) -> {
+                                    Log.debug("--- Role exists start ---");
+
+                                    if (throwable != null) {
+                                        Log.debug("Unable to give Player role to " + interaction.getUser().getName());
+                                        throwable.printStackTrace();
+                                    } else {
+                                        Log.debug("Given Player role to " + interaction.getUser().getName());
+                                    }
+
+                                    Log.debug("--- Role exists end ---");
+                                });
 
                         interaction
                                 .getUser()
@@ -203,7 +216,19 @@ public class VerifyCommand extends Command {
                                     // Add role to user
                                     interaction
                                             .getUser()
-                                            .addRole(role);
+                                            .addRole(role)
+                                            .whenComplete((unused, throwable) -> {
+                                                Log.debug("--- Role does not exists start ---");
+
+                                                if (throwable != null) {
+                                                    Log.debug("Unable to give Player role to " + interaction.getUser().getName());
+                                                    throwable.printStackTrace();
+                                                } else {
+                                                    Log.debug("Given Player role to " + interaction.getUser().getName());
+                                                }
+
+                                                Log.debug("--- Role does not exists end ---");
+                                            });
 
                                     interaction
                                             .getUser()
