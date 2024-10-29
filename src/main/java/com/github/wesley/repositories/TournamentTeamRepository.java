@@ -13,4 +13,6 @@ public interface TournamentTeamRepository extends JpaRepository<TournamentTeam, 
     @Transactional
     @Query(value = "UPDATE TournamentTeam SET discordId = :discordId WHERE id = :teamId")
     void updateDiscordId(Long teamId, String discordId);
+
+    TournamentTeam findByDiscordId(String discordId);
 }

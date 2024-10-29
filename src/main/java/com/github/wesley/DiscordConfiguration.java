@@ -110,6 +110,12 @@ public class DiscordConfiguration {
                 .createGlobal(discordApi)
                 .join();
 
+        SlashCommand.with("updateteamname", "Updates your team channel names to whatever it is set on wyBin.")
+                .setEnabledInDms(false)
+                .setDefaultEnabledForEveryone()
+                .createGlobal(discordApi)
+                .join();
+
 //        SlashCommand.with("teamcolour", "Changes the colour of the role from your team.")
 //                .setEnabledInDms(false)
 //                .setDefaultEnabledForEveryone()
