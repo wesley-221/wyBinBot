@@ -14,10 +14,14 @@ import org.springframework.stereotype.Component;
 public class UpdateTeamNameCommand extends Command {
     private final TournamentTeamRepository tournamentTeamRepository;
 
+    public boolean teamUpdated;
+
     @Autowired
     public UpdateTeamNameCommand(TournamentTeamRepository tournamentTeamRepository) {
         this.tournamentTeamRepository = tournamentTeamRepository;
         this.commandName = "updateteamname";
+
+        teamUpdated = false;
     }
 
     @Override
@@ -40,14 +44,10 @@ public class UpdateTeamNameCommand extends Command {
                 TournamentTeam findTeam = tournamentTeamRepository.findByDiscordId(String.valueOf(roleId));
 
                 if (findTeam == null) {
-                    interaction
-                            .createImmediateResponder()
-                            .setContent("Could not find your team. Are you running this command in your team's channel?")
-                            .setFlags(MessageFlag.EPHEMERAL)
-                            .respond();
-
                     return;
                 }
+
+                this.teamUpdated = true;
 
                 server.getChannelCategories().forEach(channelCategory -> {
                     channelCategory.getOverwrittenPermissions().forEach((channelRoleId, channelPermission) -> {
@@ -90,5 +90,13 @@ public class UpdateTeamNameCommand extends Command {
                         .respond();
             }
         });
+
+        if (!teamUpdated) {
+            interaction
+                    .createImmediateResponder()
+                    .setContent("Could not find your team. Are you running this command in your team's channel?")
+                    .setFlags(MessageFlag.EPHEMERAL)
+                    .respond();
+        }
     }
 }
