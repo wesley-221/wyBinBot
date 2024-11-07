@@ -116,6 +116,15 @@ public class DiscordConfiguration {
                 .createGlobal(discordApi)
                 .join();
 
+        SlashCommand.with("setupserver", "Setup the Discord server so that verification works.",
+                List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you by wyBin on the Discord Integration section.", true)
+                ))
+                .setEnabledInDms(false)
+                .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
+                .createGlobal(discordApi)
+                .join();
+
 //        SlashCommand.with("teamcolour", "Changes the colour of the role from your team.")
 //                .setEnabledInDms(false)
 //                .setDefaultEnabledForEveryone()
