@@ -11,6 +11,8 @@ public interface TournamentRepository extends JpaRepository<Tournament, Integer>
 
     Tournament findByDiscordSecret(String discordSecret);
 
+    Tournament findByDiscordServerId(String serverId);
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
     @Query("UPDATE Tournament SET discordServerId = :discordServerId, discordPlayerRoleId = :discordPlayerRoleId WHERE id = :tournamentId")

@@ -65,10 +65,7 @@ public class DiscordConfiguration {
                 .createGlobal(discordApi)
                 .join();
 
-        SlashCommand.with("verify", "Verify who you are by changing your name to your osu! username.",
-                        List.of(
-                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you on wyBin Discord verify", true)
-                        ))
+        SlashCommand.with("verify", "Verify who you are by changing your name to your osu! username.")
                 .setEnabledInDms(false)
                 .setDefaultEnabledForEveryone()
                 .createGlobal(discordApi)
@@ -117,9 +114,9 @@ public class DiscordConfiguration {
                 .join();
 
         SlashCommand.with("setupserver", "Setup the Discord server so that verification works.",
-                List.of(
-                        SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you by wyBin on the Discord Integration section.", true)
-                ))
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, "secret", "The secret that was given to you by wyBin on the Discord Integration section.", true)
+                        ))
                 .setEnabledInDms(false)
                 .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
                 .createGlobal(discordApi)
