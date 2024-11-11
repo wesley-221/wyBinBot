@@ -21,13 +21,14 @@ public class VerifyUser {
 
     private String tournamentSlug;
     private String discordPlayerId;
-    private String verifyCode;
+    private String verificationCode;
+    private Long teamId;
     private Date expireAt;
 
-    public VerifyUser(String tournamentSlug, String discordPlayerId, String verifyCode, Date expireAt) {
+    public VerifyUser(String tournamentSlug, String discordPlayerId, String verificationCode, Date expireAt) {
         this.tournamentSlug = tournamentSlug;
         this.discordPlayerId = discordPlayerId;
-        this.verifyCode = verifyCode;
+        this.verificationCode = verificationCode;
         this.expireAt = expireAt;
     }
 }

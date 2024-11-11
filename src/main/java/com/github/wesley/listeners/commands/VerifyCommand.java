@@ -50,22 +50,21 @@ public class VerifyCommand extends Command {
             return;
         }
 
-        String verifyCode = String.valueOf(UUID.randomUUID());
+        String verificationCode = String.valueOf(UUID.randomUUID());
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.HOUR, 1);
 
-        VerifyUser verifyUser = new VerifyUser(findTournament.getSlug(), user.getIdAsString(), verifyCode, calendar.getTime());
+        VerifyUser verifyUser = new VerifyUser(findTournament.getSlug(), user.getIdAsString(), verificationCode, calendar.getTime());
 
         verifyUserRepository.save(verifyUser);
 
         interaction
                 .createImmediateResponder()
                 .setContent("In order to verify yourself for this tournament, you need to click on the link listed at the bottom of this message. " +
-                        "If you are not logged in to wyBin, you will be asked to login.\n" +
                         "Once you click on the link, simply follow the instructions there and you will be verified in no time.\n\r" +
-                        "Verification link: " + WYBIN_VERIFY_URL + verifyCode)
+                        "Verification link: " + WYBIN_VERIFY_URL + verificationCode)
                 .setFlags(MessageFlag.EPHEMERAL)
                 .respond();
     }
