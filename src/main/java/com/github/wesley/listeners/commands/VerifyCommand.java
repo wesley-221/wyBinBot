@@ -54,7 +54,7 @@ public class VerifyCommand extends Command {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.HOUR, 1);
+        calendar.add(Calendar.MINUTE, 15);
 
         VerifyUser verifyUser = new VerifyUser(findTournament.getSlug(), user.getIdAsString(), verificationCode, calendar.getTime());
 
