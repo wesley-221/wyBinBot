@@ -23,6 +23,7 @@ public class VerifyUser {
     private String discordPlayerId;
     private String verificationCode;
     private Long teamId;
+    private Boolean isPlayer;
     private Date expireAt;
 
     public VerifyUser(String tournamentSlug, String discordPlayerId, String verificationCode, Date expireAt) {
@@ -30,5 +31,13 @@ public class VerifyUser {
         this.discordPlayerId = discordPlayerId;
         this.verificationCode = verificationCode;
         this.expireAt = expireAt;
+    }
+
+    public Boolean getIsPlayer() {
+        if (isPlayer == null) {
+            return false;
+        }
+
+        return isPlayer;
     }
 }
