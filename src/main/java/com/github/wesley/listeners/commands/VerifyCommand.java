@@ -43,7 +43,7 @@ public class VerifyCommand extends Command {
         if (findTournament == null) {
             interaction
                     .createImmediateResponder()
-                    .setContent("Unable to find a tournament linked to this Discord server.")
+                    .setContent("Discord verification is not setup for this server.")
                     .setFlags(MessageFlag.EPHEMERAL)
                     .respond();
 
