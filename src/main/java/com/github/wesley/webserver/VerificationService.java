@@ -128,7 +128,7 @@ public class VerificationService {
 
                                         tournamentTeamRepository.updateDiscordId(findTeam.getId(), String.valueOf(role.getId()));
 
-                                        discordUser.get().sendMessage("You have been added to the team channels of **" + findTeam.getName() + "** for the tournament **" + findTournament.getName() + "**!");
+                                        discordUser.get().sendMessage("You have been given access to the team channels of **" + findTeam.getName() + "** for the tournament **" + findTournament.getName() + "**!");
                                     });
                         });
 
@@ -137,7 +137,7 @@ public class VerificationService {
                         .get()
                         .getRoleById(findTeam.getDiscordId())
                         .ifPresent(role -> discordUser.get().addRole(role).whenComplete((unused, throwable) -> {
-                            discordUser.get().sendMessage("You have been added to the team channels of **" + findTeam.getName() + "** for the tournament **" + findTournament.getName() + "**!");
+                            discordUser.get().sendMessage("You have been given access to the team channels of **" + findTeam.getName() + "** for the tournament **" + findTournament.getName() + "**!");
                         }));
             }
         }
