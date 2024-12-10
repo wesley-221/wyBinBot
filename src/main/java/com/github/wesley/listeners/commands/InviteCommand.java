@@ -42,9 +42,9 @@ public class InviteCommand extends Command {
         String embedDescription = "**Add " + botName + " to your Discord guild:** \n" +
                 botInvite + "\n\n" +
                 "**Bug/feature requests:** \n" +
-                "File an issue: " + githubLink + "\n\n" +
+                "File an issue: " + githubIssuesLink + "\n\n" +
                 "**Source code:** \n" +
-                githubIssuesLink;
+                githubLink;
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setThumbnail(interaction.getApi().getYourself().getAvatar().getUrl().toString())
