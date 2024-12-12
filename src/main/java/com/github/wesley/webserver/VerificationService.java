@@ -1,10 +1,13 @@
 package com.github.wesley.webserver;
 
 import com.github.wesley.DiscordConfiguration;
+import com.github.wesley.helper.Log;
 import com.github.wesley.models.VerifyUser;
 import com.github.wesley.models.tournament.Tournament;
 import com.github.wesley.models.tournament.TournamentTeam;
+import com.github.wesley.models.tournament.TournamentTeamMember;
 import com.github.wesley.repositories.TournamentRepository;
+import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
 import com.github.wesley.repositories.VerifyUserRepository;
 import org.javacord.api.entity.permission.PermissionType;
