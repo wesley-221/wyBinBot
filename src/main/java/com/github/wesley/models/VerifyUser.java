@@ -22,6 +22,7 @@ public class VerifyUser {
     private String tournamentSlug;
     private String discordPlayerId;
     private String verificationCode;
+    private Long userId;
     private Long teamId;
     private Boolean isPlayer;
     private Date expireAt;

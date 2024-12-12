@@ -20,6 +20,9 @@ public class TournamentTeamMember {
     private String discordId;
     private String discordSecret;
 
+    @ManyToOne
+    private TournamentTeam team;
+
     @OneToOne
     private User user;
 }

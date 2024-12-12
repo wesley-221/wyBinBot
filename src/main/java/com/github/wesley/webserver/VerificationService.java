@@ -24,13 +24,15 @@ public class VerificationService {
 
     private final TournamentRepository tournamentRepository;
     private final TournamentTeamRepository tournamentTeamRepository;
+    private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
     private final VerifyUserRepository verifyUserRepository;
 
     @Autowired
-    public VerificationService(DiscordConfiguration discordConfiguration, TournamentRepository tournamentRepository, TournamentTeamRepository tournamentTeamRepository, VerifyUserRepository verifyUserRepository) {
+    public VerificationService(DiscordConfiguration discordConfiguration, TournamentRepository tournamentRepository, TournamentTeamRepository tournamentTeamRepository, TournamentTeamMemberRepository tournamentTeamMemberRepository, VerifyUserRepository verifyUserRepository) {
         this.discordConfiguration = discordConfiguration;
         this.tournamentRepository = tournamentRepository;
         this.tournamentTeamRepository = tournamentTeamRepository;
+        this.tournamentTeamMemberRepository = tournamentTeamMemberRepository;
         this.verifyUserRepository = verifyUserRepository;
     }
 
@@ -70,11 +72,18 @@ public class VerificationService {
             return;
         }
 
+        Log.info(discordUser.get().getName() + " is a player: " + verifyUser.getIsPlayer());
+
         if (verifyUser.getIsPlayer()) {
             discordUser
                     .get()
                     .addRole(playerRole.get())
                     .whenComplete((unused, throwable) -> {
+                        Log.info("Giving player role to " + discordUser.get().getName());
+
+                        if (throwable != null)
+                            throwable.printStackTrace();
+
                         discordUser.get().sendMessage("You have been given the Player role for the tournament **" + findTournament.getName() + "**!");
                     });
         }
@@ -82,6 +91,12 @@ public class VerificationService {
         TournamentTeam findTeam = tournamentTeamRepository.findById(verifyUser.getTeamId());
 
         if (findTeam != null) {
+            for (TournamentTeamMember teamMember : findTeam.getTeamMembers()) {
+                if (teamMember.getUser().getId().equals(verifyUser.getUserId())) {
+                    tournamentTeamMemberRepository.updateDiscordId(teamMember.getId(), discordUser.get().getIdAsString());
+                }
+            }
+
             if (findTeam.getDiscordId() == null) {
                 server
                         .get()
@@ -96,7 +111,12 @@ public class VerificationService {
                                 roleThrowable.printStackTrace();
 
                             // Add role to user
-                            discordUser.get().addRole(role);
+                            discordUser.get().addRole(role).whenComplete((unused, addRoleThrowable) -> {
+                                Log.info("Giving role " + findTeam.getName() + " to " + discordUser.get().getName());
+
+                                if (addRoleThrowable != null)
+                                    addRoleThrowable.printStackTrace();
+                            });
 
                             // Create channel category
                             server
@@ -137,6 +157,11 @@ public class VerificationService {
                         .get()
                         .getRoleById(findTeam.getDiscordId())
                         .ifPresent(role -> discordUser.get().addRole(role).whenComplete((unused, throwable) -> {
+                            Log.info("Giving role " + findTeam.getName() + " to " + discordUser.get().getName());
+
+                            if (throwable != null)
+                                throwable.printStackTrace();
+
                             discordUser.get().sendMessage("You have been given access to the team channels of **" + findTeam.getName() + "** for the tournament **" + findTournament.getName() + "**!");
                         }));
             }

@@ -19,8 +19,8 @@ import java.util.UUID;
 @Component
 public class VerifyCommand extends Command {
     public static final String PLAYER_ROLE = "Player";
-    //    private final String WYBIN_VERIFY_URL = "https://wybin.xyz/tournament-verify/";
-    private final String WYBIN_VERIFY_URL = "http://localhost:4200/tournament-verify/";
+        private final String WYBIN_VERIFY_URL = "https://wybin.xyz/tournament-verify/";
+//    private final String WYBIN_VERIFY_URL = "http://localhost:4200/tournament-verify/";
 
     private final TournamentRepository tournamentRepository;
     private final VerifyUserRepository verifyUserRepository;

@@ -4,8 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -21,4 +22,7 @@ public class TournamentTeam {
     private String discordSecret;
     private String acronym;
     private String flagAcronym;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<TournamentTeamMember> teamMembers = new ArrayList<>();
 }
