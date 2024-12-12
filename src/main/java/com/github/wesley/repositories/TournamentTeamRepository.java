@@ -15,4 +15,6 @@ public interface TournamentTeamRepository extends JpaRepository<TournamentTeam, 
     void updateDiscordId(Long teamId, String discordId);
 
     TournamentTeam findByDiscordId(String discordId);
+
+    TournamentTeam findById(Long teamId);
 }

@@ -15,4 +15,10 @@ public class Tournament {
     @Id
     private Long id;
     private String slug;
+    private String name;
+
+    private String discordServerId;
+    private String discordPlayerRoleId;
+
+    private String discordSecret;
 }
