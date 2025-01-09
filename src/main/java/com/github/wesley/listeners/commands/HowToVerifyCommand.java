@@ -18,22 +18,28 @@ public class HowToVerifyCommand extends Command {
     public void execute(SlashCommandInteraction interaction) {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setDescription("## Verify yourself\n" +
-                        "Verifying yourself is only used for when you are not a participant or a staff member. If you are either one of those, follow the steps linked below.\n" +
-                        "First go to https://wybin.xyz/osu-dashboard/discord-verify and login if you aren't logged in already.\n" +
-                        "Once you are logged in, a Discord secret will be shown, copy this Discord secret.\n" +
-                        "Now run the command `/verify` in any channel where you are able to type (and press enter, so a small box with `secret` shows up).\n\n" +
-                        "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!\n\n" +
+                .setDescription("# Verifying yourself\n" +
+                        "Verifying yourself is quick and easy! Follow these steps to gain access to your tournament roles and channels on Discord.\n" +
 
-                        "## Verify as a player\n" +
-                        "Go to the tournament you want to verify yourself for, scroll down and go to the Discord tab. Copy the secret that starts with `player-username-xxxxxxxx`.\n" +
-                        "Now run the command `/verify` in any channel where you are able to type (and press enter, so a small box with `secret` shows up).\n" +
-                        "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!\n\n" +
+                        "## Join the Tournament's Discord server\n" +
+                        "Ensure you're in the Discord server for the tournament you want to verify for.\n" +
 
-                        "## Verify as a staff member\n" +
-                        "Go to the tournament you want to verify yourself for and go to the staff page. Now open the Discord verification box and copy the secret that starts with `staff-username-********`.\n" +
-                        "Now run the command `/verify` in any channel where you are able to type (and press enter, so a small box with `secret` shows up).\n" +
-                        "Next paste the Discord secret you copied earlier and press enter. Your username has now been changed to your osu! username!");
+                        "## Access Any Text Channel\n" +
+                        "Navigate to any text channel where you can type messages.\n" +
+                        "**Note**: This can be any text channel you can type in.\n" +
+
+                        "## Use the `/verify` command\n" +
+                        "Type and send the command `/verify`. The Discord bot will respond with a message containing a link.\n" +
+
+                        "## Follow the Verification Link\n" +
+                        "- Click the link in the bot's message.\n" +
+                        "- You'll be redirected to the wyBin website, where it will display your verification status.\n" +
+                        "- Once you see the message \"**You can now close this page!**\", you can close the tab and return to Discord.\n" +
+
+                        "## Confirmation in Discord\n" +
+                        "If you're a player in the tournament, the bot will send you a message confirming your verification.\n\n" +
+
+                        "You are now successfully verified! Welcome to the tournament!");
         interaction
                 .createImmediateResponder()
                 .setFlags(MessageFlag.EPHEMERAL)
