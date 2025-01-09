@@ -10,13 +10,12 @@ import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.github.wesley.listeners.commands.VerifyCommand.PLAYER_ROLE;
 
 @Component
 public class PlayerRolesCommand extends Command {
@@ -54,13 +53,11 @@ public class PlayerRolesCommand extends Command {
             Optional<Server> server = interaction.getServer();
 
             if (server.isPresent()) {
-                List<Role> roleList = server
+                Optional<Role> playerRole = server
                         .get()
-                        .getRolesByName(PLAYER_ROLE);
+                        .getRoleById(tournament.getDiscordPlayerRoleId());
 
-                if (roleList.size() > 0) {
-                    Role role = roleList.get(0);
-
+                if (playerRole.isPresent()) {
                     List<TournamentTeamMember> allTeamMembers = this.tournamentTeamMemberRepository.getPlayersByTournamentId(tournament.getId());
 
                     for (TournamentTeamMember teamMember : allTeamMembers) {
@@ -68,12 +65,16 @@ public class PlayerRolesCommand extends Command {
                                 .getApi()
                                 .getUserById(teamMember.getDiscordId())
                                 .whenComplete((user, throwable) -> {
-                                    if (!user.getRoles(server.get()).contains(role)) {
-                                        user.addRole(role);
+                                    if (throwable != null) {
+                                        throwable.printStackTrace();
+                                    }
+
+                                    if (!user.getRoles(server.get()).contains(playerRole.get())) {
+                                        user.addRole(playerRole.get()).exceptionally(ExceptionLogger.get());
                                     }
 
                                     user.updateNickname(server.get(), teamMember.getUser().getUsername().trim());
-                                });
+                                }).exceptionally(ExceptionLogger.get());
                     }
 
                     interaction
