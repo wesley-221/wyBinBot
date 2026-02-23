@@ -10,7 +10,6 @@ import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -23,7 +22,6 @@ import static com.github.wesley.listeners.commands.VerifyCommand.PLAYER_ROLE;
 public class SetupServerCommand extends Command {
     private final TournamentRepository tournamentRepository;
 
-    @Autowired
     public SetupServerCommand(TournamentRepository tournamentRepository) {
         this.tournamentRepository = tournamentRepository;
 

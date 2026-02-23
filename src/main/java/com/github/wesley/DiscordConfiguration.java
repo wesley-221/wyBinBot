@@ -10,7 +10,6 @@ import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
 import org.javacord.api.interaction.SlashCommandOptionType;
 import org.javacord.api.listener.GloballyAttachableListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,6 @@ public class DiscordConfiguration {
     private final String discordToken;
     private DiscordApi discordApi;
 
-    @Autowired
     public DiscordConfiguration(ApplicationContext applicationContext, @Value("${discord.token}") String discordToken) {
         this.applicationContext = applicationContext;
         this.discordToken = discordToken;

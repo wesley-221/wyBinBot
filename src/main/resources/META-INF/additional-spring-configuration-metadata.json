@@ -1,0 +1,29 @@
+{
+    "properties": [
+        {
+            "name": "bot.name",
+            "type": "java.lang.String",
+            "description": "The name of the Discord bot"
+        },
+        {
+            "name": "bot.github",
+            "type": "java.lang.String",
+            "description": "The link to the GitHub repository for the bot"
+        },
+        {
+            "name": "bot.issues",
+            "type": "java.lang.String",
+            "description": "The link to the GitHub issues page for the bot"
+        },
+        {
+            "name": "discord.token",
+            "type": "java.lang.String",
+            "description": "The token for the Discord bot"
+        },
+        {
+            "name": "discord.command-prefix",
+            "type": "java.lang.String",
+            "description": "The command prefix for the Discord bot"
+        }
+    ]
+}

@@ -9,7 +9,6 @@ import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
@@ -28,7 +27,6 @@ public class VerifyCommand extends Command {
         private final TournamentRepository tournamentRepository;
         private final VerifyUserRepository verifyUserRepository;
 
-        @Autowired
         public VerifyCommand(TournamentRepository tournamentRepository, VerifyUserRepository verifyUserRepository) {
                 this.tournamentRepository = tournamentRepository;
                 this.verifyUserRepository = verifyUserRepository;

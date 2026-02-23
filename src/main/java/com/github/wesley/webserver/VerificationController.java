@@ -1,6 +1,5 @@
 package com.github.wesley.webserver;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +9,6 @@ public class VerificationController {
 
     private final VerificationService verificationService;
 
-    @Autowired
     public VerificationController(VerificationService verificationService) {
         this.verificationService = verificationService;
     }

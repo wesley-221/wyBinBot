@@ -7,7 +7,6 @@ import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +15,6 @@ public class UpdateTeamNameCommand extends Command {
 
     public boolean teamUpdated;
 
-    @Autowired
     public UpdateTeamNameCommand(TournamentTeamRepository tournamentTeamRepository) {
         this.tournamentTeamRepository = tournamentTeamRepository;
         this.commandName = "updateteamname";

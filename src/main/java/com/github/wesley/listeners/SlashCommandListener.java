@@ -6,7 +6,6 @@ import com.github.wesley.models.Command;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import java.util.List;
 public class SlashCommandListener implements SlashCommandCreateListener, RegisterListener {
     private final List<Command> allCommands = new ArrayList<>();
 
-    @Autowired
     public SlashCommandListener(ApplicationContext applicationContext) {
         for (Command command : applicationContext.getBeansOfType(Command.class).values()) {
             if (command.getCommandName() == null) {

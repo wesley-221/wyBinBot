@@ -5,7 +5,6 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ public class InviteCommand extends Command {
     private final String githubLink;
     private final String githubIssuesLink;
 
-    @Autowired
     public InviteCommand(@Value("${bot.name}") String botName, @Value("${bot.github}") String githubLink, @Value("${bot.issues}") String githubIssuesLink) {
         this.commandName = "invite";
 

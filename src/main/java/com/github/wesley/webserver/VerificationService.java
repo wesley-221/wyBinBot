@@ -15,7 +15,6 @@ import org.javacord.api.entity.permission.PermissionsBuilder;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -30,7 +29,6 @@ public class VerificationService {
     private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
     private final VerifyUserRepository verifyUserRepository;
 
-    @Autowired
     public VerificationService(DiscordConfiguration discordConfiguration, TournamentRepository tournamentRepository, TournamentTeamRepository tournamentTeamRepository, TournamentTeamMemberRepository tournamentTeamMemberRepository, VerifyUserRepository verifyUserRepository) {
         this.discordConfiguration = discordConfiguration;
         this.tournamentRepository = tournamentRepository;

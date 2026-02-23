@@ -10,9 +10,9 @@ server.ssl.keyAlias=tomcat
 discord.token=
 discord.command-prefix=!
 
-database.url=
-database.username=
-database.password=
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
 
 bot.name=wyBin
 bot.github=https://github.com/wesley-221/wyBinBot

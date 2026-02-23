@@ -14,7 +14,6 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.util.logging.ExceptionLogger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class PlayerRolesCommand extends Command {
     private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
     private final TournamentStaffRepository tournamentStaffRepository;
 
-    @Autowired
     public PlayerRolesCommand(TournamentRepository tournamentRepository,
             TournamentTeamMemberRepository tournamentTeamMemberRepository,
             TournamentStaffRepository tournamentStaffRepository) {
