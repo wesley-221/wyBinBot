@@ -1,6 +1,9 @@
 package com.github.wesley.repositories;
 
 import com.github.wesley.models.tournament.TournamentStaff;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +16,7 @@ public interface TournamentStaffRepository extends JpaRepository<TournamentStaff
     @Transactional
     @Query(value = "UPDATE TournamentStaff SET discordId = :discordId WHERE id = :staffMemberId")
     void updateDiscordId(Long staffMemberId, String discordId);
+
+    @Query(value = "SELECT * FROM tournament_staff WHERE tournament_id = :tournamentId", nativeQuery = true)
+    List<TournamentStaff> findByTournamentId(Long tournamentId);
 }

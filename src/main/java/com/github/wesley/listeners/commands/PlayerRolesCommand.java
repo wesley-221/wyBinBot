@@ -1,9 +1,12 @@
 package com.github.wesley.listeners.commands;
 
+import com.github.wesley.helper.Log;
 import com.github.wesley.models.Command;
 import com.github.wesley.models.tournament.Tournament;
+import com.github.wesley.models.tournament.TournamentStaff;
 import com.github.wesley.models.tournament.TournamentTeamMember;
 import com.github.wesley.repositories.TournamentRepository;
+import com.github.wesley.repositories.TournamentStaffRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.Role;
@@ -21,11 +24,15 @@ import java.util.Optional;
 public class PlayerRolesCommand extends Command {
     private final TournamentRepository tournamentRepository;
     private final TournamentTeamMemberRepository tournamentTeamMemberRepository;
+    private final TournamentStaffRepository tournamentStaffRepository;
 
     @Autowired
-    public PlayerRolesCommand(TournamentRepository tournamentRepository, TournamentTeamMemberRepository tournamentTeamMemberRepository) {
+    public PlayerRolesCommand(TournamentRepository tournamentRepository,
+            TournamentTeamMemberRepository tournamentTeamMemberRepository,
+            TournamentStaffRepository tournamentStaffRepository) {
         this.tournamentRepository = tournamentRepository;
         this.tournamentTeamMemberRepository = tournamentTeamMemberRepository;
+        this.tournamentStaffRepository = tournamentStaffRepository;
 
         this.commandName = "playerroles";
     }
@@ -58,9 +65,14 @@ public class PlayerRolesCommand extends Command {
                         .getRoleById(tournament.getDiscordPlayerRoleId());
 
                 if (playerRole.isPresent()) {
-                    List<TournamentTeamMember> allTeamMembers = this.tournamentTeamMemberRepository.getPlayersByTournamentId(tournament.getId());
+                    List<TournamentTeamMember> allTeamMembers = this.tournamentTeamMemberRepository
+                            .getPlayersByTournamentId(tournament.getId());
 
                     for (TournamentTeamMember teamMember : allTeamMembers) {
+                        if (teamMember.getDiscordId() == null) {
+                            continue;
+                        }
+
                         interaction
                                 .getApi()
                                 .getUserById(teamMember.getDiscordId())
@@ -76,12 +88,33 @@ public class PlayerRolesCommand extends Command {
                                     user.updateNickname(server.get(), teamMember.getUser().getUsername().trim());
                                 }).exceptionally(ExceptionLogger.get());
                     }
+                }
+
+                List<TournamentStaff> allStaff = this.tournamentStaffRepository.findByTournamentId(tournament.getId());
+
+                for (TournamentStaff staffMember : allStaff) {
+                    if (staffMember.getDiscordId() == null) {
+                        continue;
+                    }
 
                     interaction
-                            .createImmediateResponder()
-                            .setContent("Updated everyone's roles and usernames if they were not present.")
-                            .respond();
+                            .getApi()
+                            .getUserById(staffMember.getDiscordId())
+                            .whenComplete((user, throwable) -> {
+                                if (throwable != null) {
+                                    throwable.printStackTrace();
+                                }
+
+                                user.updateNickname(server.get(), staffMember.getUser().getUsername().trim());
+
+                                Log.info("Updated staff member " + staffMember.getUser().getUsername());
+                            }).exceptionally(ExceptionLogger.get());
                 }
+
+                interaction
+                        .createImmediateResponder()
+                        .setContent("Updated everyone's roles and usernames if they were not present.")
+                        .respond();
             }
         }
     }
