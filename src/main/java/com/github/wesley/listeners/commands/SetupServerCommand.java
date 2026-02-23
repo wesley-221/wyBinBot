@@ -54,6 +54,7 @@ public class SetupServerCommand extends Command {
 
             boolean mentionEveryoneEnabled = false;
             PermissionsBuilder permissionsBuilder = new PermissionsBuilder()
+                    .setAllowed(server.getEveryoneRole().getAllowedPermissions().toArray(new PermissionType[0]))
                     .setDenied(PermissionType.MENTION_EVERYONE);
 
             if (server.getEveryoneRole().getAllowedPermissions().contains(PermissionType.MENTION_EVERYONE)) {
@@ -63,7 +64,8 @@ public class SetupServerCommand extends Command {
             if (playerRoles.size() > 0) {
                 Role playerRole = playerRoles.get(0);
 
-                tournamentRepository.updateDiscordServerAndPlayerRoleId(findTournament.getId(), server.getIdAsString(), playerRole.getIdAsString());
+                tournamentRepository.updateDiscordServerAndPlayerRoleId(findTournament.getId(), server.getIdAsString(),
+                        playerRole.getIdAsString());
 
                 if (mentionEveryoneEnabled) {
                     server
@@ -75,8 +77,10 @@ public class SetupServerCommand extends Command {
                                 interaction
                                         .createImmediateResponder()
                                         .setContent("Successfully setup the Discord server. \n\n" +
-                                                "The default role had the permission `Mention @everyone, @here, and All Roles` enabled. This has been disabled for you. If this was not needed, feel free to change it back.\n\n" +
-                                                "The role " + playerRole.getMentionTag() + " was found and reused.\n\r" +
+                                                "The default role had the permission `Mention @everyone, @here, and All Roles` enabled. This has been disabled for you. If this was not needed, feel free to change it back.\n\n"
+                                                +
+                                                "The role " + playerRole.getMentionTag() + " was found and reused.\n\r"
+                                                +
                                                 "**Note:** You have to refresh the wyBin website in order for the Discord settings to be updated.")
                                         .setFlags(MessageFlag.EPHEMERAL)
                                         .respond();
@@ -84,7 +88,8 @@ public class SetupServerCommand extends Command {
                 } else {
                     interaction
                             .createImmediateResponder()
-                            .setContent("Successfully setup the Discord server. The role " + playerRole.getMentionTag() + " was found and reused. \n\r**Note:** You have to refresh the wyBin website in order for the Discord settings to be updated.")
+                            .setContent("Successfully setup the Discord server. The role " + playerRole.getMentionTag()
+                                    + " was found and reused. \n\r**Note:** You have to refresh the wyBin website in order for the Discord settings to be updated.")
                             .setFlags(MessageFlag.EPHEMERAL)
                             .respond();
                 }
@@ -107,13 +112,17 @@ public class SetupServerCommand extends Command {
                                             if (throwable != null)
                                                 throwable.printStackTrace();
 
-                                            tournamentRepository.updateDiscordServerAndPlayerRoleId(findTournament.getId(), server.getIdAsString(), role.getIdAsString());
+                                            tournamentRepository.updateDiscordServerAndPlayerRoleId(
+                                                    findTournament.getId(), server.getIdAsString(),
+                                                    role.getIdAsString());
 
                                             interaction
                                                     .createImmediateResponder()
                                                     .setContent("Successfully setup the Discord server. \n\n" +
-                                                            "The default role had the permission `Mention @everyone, @here, and All Roles` enabled. This has been disabled for you. If this was not needed, feel free to change it back.\n\n" +
-                                                            "The role " + role.getMentionTag() + " has been created.\n\r" +
+                                                            "The default role had the permission `Mention @everyone, @here, and All Roles` enabled. This has been disabled for you. If this was not needed, feel free to change it back.\n\n"
+                                                            +
+                                                            "The role " + role.getMentionTag()
+                                                            + " has been created.\n\r" +
                                                             "**Note:** You have to refresh the wyBin website in order for the Discord settings to be updated.")
                                                     .setFlags(MessageFlag.EPHEMERAL)
                                                     .respond();
@@ -131,11 +140,14 @@ public class SetupServerCommand extends Command {
                                 if (throwable != null)
                                     throwable.printStackTrace();
 
-                                tournamentRepository.updateDiscordServerAndPlayerRoleId(findTournament.getId(), server.getIdAsString(), role.getIdAsString());
+                                tournamentRepository.updateDiscordServerAndPlayerRoleId(findTournament.getId(),
+                                        server.getIdAsString(), role.getIdAsString());
 
                                 interaction
                                         .createImmediateResponder()
-                                        .setContent("Successfully setup the Discord server. The role " + role.getMentionTag() + " has been created. \n\r**Note:** You have to refresh the wyBin website in order for the Discord settings to be updated.")
+                                        .setContent("Successfully setup the Discord server. The role "
+                                                + role.getMentionTag()
+                                                + " has been created. \n\r**Note:** You have to refresh the wyBin website in order for the Discord settings to be updated.")
                                         .setFlags(MessageFlag.EPHEMERAL)
                                         .respond();
                             });

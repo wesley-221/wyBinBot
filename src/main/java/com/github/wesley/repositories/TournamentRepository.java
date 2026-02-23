@@ -1,6 +1,9 @@
 package com.github.wesley.repositories;
 
 import com.github.wesley.models.tournament.Tournament;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +14,7 @@ public interface TournamentRepository extends JpaRepository<Tournament, Integer>
 
     Tournament findByDiscordSecret(String discordSecret);
 
-    Tournament findByDiscordServerId(String serverId);
+    List<Tournament> findByDiscordServerId(String serverId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
