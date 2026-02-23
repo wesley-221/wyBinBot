@@ -13,59 +13,69 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Component
 public class VerifyCommand extends Command {
-    public static final String PLAYER_ROLE = "Player";
+        public static final String PLAYER_ROLE = "Player";
         private final String WYBIN_VERIFY_URL = "https://wybin.xyz/tournament-verify/";
-//    private final String WYBIN_VERIFY_URL = "http://localhost:4200/tournament-verify/";
+        // private final String WYBIN_VERIFY_URL =
+        // "http://localhost:4200/tournament-verify/";
 
-    private final TournamentRepository tournamentRepository;
-    private final VerifyUserRepository verifyUserRepository;
+        private final TournamentRepository tournamentRepository;
+        private final VerifyUserRepository verifyUserRepository;
 
-    @Autowired
-    public VerifyCommand(TournamentRepository tournamentRepository, VerifyUserRepository verifyUserRepository) {
-        this.tournamentRepository = tournamentRepository;
-        this.verifyUserRepository = verifyUserRepository;
+        @Autowired
+        public VerifyCommand(TournamentRepository tournamentRepository, VerifyUserRepository verifyUserRepository) {
+                this.tournamentRepository = tournamentRepository;
+                this.verifyUserRepository = verifyUserRepository;
 
-        this.commandName = "verify";
-    }
-
-    @Override
-    public void execute(SlashCommandInteraction interaction) {
-        Server server = interaction.getServer().get();
-        User user = interaction.getUser();
-
-        Tournament findTournament = tournamentRepository.findByDiscordServerId(server.getIdAsString());
-
-        if (findTournament == null) {
-            interaction
-                    .createImmediateResponder()
-                    .setContent("Discord verification is not setup for this server.")
-                    .setFlags(MessageFlag.EPHEMERAL)
-                    .respond();
-
-            return;
+                this.commandName = "verify";
         }
 
-        String verificationCode = String.valueOf(UUID.randomUUID());
+        @Override
+        public void execute(SlashCommandInteraction interaction) {
+                Server server = interaction.getServer().get();
+                User user = interaction.getUser();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, 15);
+                List<Tournament> findTournaments = tournamentRepository.findByDiscordServerId(server.getIdAsString());
 
-        VerifyUser verifyUser = new VerifyUser(findTournament.getSlug(), user.getIdAsString(), verificationCode, calendar.getTime());
+                if (findTournaments.size() == 0) {
+                        interaction
+                                        .createImmediateResponder()
+                                        .setContent("Discord verification is not setup for this server.")
+                                        .setFlags(MessageFlag.EPHEMERAL)
+                                        .respond();
 
-        verifyUserRepository.save(verifyUser);
+                        return;
+                }
 
-        interaction
-                .createImmediateResponder()
-                .setContent("In order to verify yourself for this tournament, you need to click on the link listed at the bottom of this message. " +
-                        "Once you click on the link, simply follow the instructions there and you will be verified in no time.\n\r" +
-                        "Verification link: " + WYBIN_VERIFY_URL + verificationCode)
-                .setFlags(MessageFlag.EPHEMERAL)
-                .respond();
-    }
+                Tournament findTournament = findTournaments.stream()
+                                .max(Comparator.comparingLong(Tournament::getId))
+                                .get();
+
+                String verificationCode = String.valueOf(UUID.randomUUID());
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.MINUTE, 15);
+
+                VerifyUser verifyUser = new VerifyUser(findTournament.getSlug(), user.getIdAsString(), verificationCode,
+                                calendar.getTime());
+
+                verifyUserRepository.save(verifyUser);
+
+                interaction
+                                .createImmediateResponder()
+                                .setContent("In order to verify yourself for this tournament, you need to click on the link listed at the bottom of this message. "
+                                                +
+                                                "Once you click on the link, simply follow the instructions there and you will be verified in no time.\n\r"
+                                                +
+                                                "Verification link: " + WYBIN_VERIFY_URL + verificationCode)
+                                .setFlags(MessageFlag.EPHEMERAL)
+                                .respond();
+        }
 }
