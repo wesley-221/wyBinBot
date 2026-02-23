@@ -1,8 +1,8 @@
 package com.github.wesley.listeners;
 
-import com.github.wesley.helper.Log;
 import com.github.wesley.helper.RegisterListener;
 import com.github.wesley.models.Command;
+import lombok.extern.slf4j.Slf4j;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class SlashCommandListener implements SlashCommandCreateListener, RegisterListener {
     private final List<Command> allCommands = new ArrayList<>();
@@ -19,12 +20,12 @@ public class SlashCommandListener implements SlashCommandCreateListener, Registe
     public SlashCommandListener(ApplicationContext applicationContext) {
         for (Command command : applicationContext.getBeansOfType(Command.class).values()) {
             if (command.getCommandName() == null) {
-                Log.error("Unable to register Slash Command " + command.getClass() + ". You have to set the command name in order for it to be recognized.");
+                log.error("Unable to register Slash Command " + command.getClass() + ". You have to set the command name in order for it to be recognized.");
                 continue;
             }
 
             allCommands.add(command);
-            Log.info("Registered the Slash Command " + command.getClass().getName());
+            log.info("Registered the Slash Command " + command.getClass().getName());
         }
     }
 

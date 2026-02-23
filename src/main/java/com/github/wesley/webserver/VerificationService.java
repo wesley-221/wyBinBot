@@ -1,7 +1,6 @@
 package com.github.wesley.webserver;
 
 import com.github.wesley.DiscordConfiguration;
-import com.github.wesley.helper.Log;
 import com.github.wesley.models.VerifyUser;
 import com.github.wesley.models.tournament.Tournament;
 import com.github.wesley.models.tournament.TournamentTeam;
@@ -10,6 +9,7 @@ import com.github.wesley.repositories.TournamentRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
 import com.github.wesley.repositories.TournamentTeamRepository;
 import com.github.wesley.repositories.VerifyUserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
 import org.javacord.api.entity.permission.Role;
@@ -21,6 +21,7 @@ import java.awt.*;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class VerificationService {
     private final DiscordConfiguration discordConfiguration;
 
@@ -41,11 +42,6 @@ public class VerificationService {
         VerifyUser verifyUser = verifyUserRepository.findByVerificationCode(verificationCode);
 
         if (verifyUser == null) {
-            return;
-        }
-
-        // Abort if nothing needs to be done to the user roles
-        if (!verifyUser.getIsPlayer() && verifyUser.getTeamId() == null) {
             return;
         }
 
@@ -73,19 +69,32 @@ public class VerificationService {
             return;
         }
 
-        Log.info(discordUser.get().getName() + " is a player: " + verifyUser.getIsPlayer());
+        log.info(discordUser.get().getName() + " is a player: " + verifyUser.getIsPlayer());
 
         if (verifyUser.getIsPlayer()) {
             discordUser
                     .get()
                     .addRole(playerRole.get())
                     .whenComplete((unused, throwable) -> {
-                        Log.info("Giving player role to " + discordUser.get().getName());
+                        log.info("Giving player role to " + discordUser.get().getName());
 
                         if (throwable != null)
                             throwable.printStackTrace();
 
                         discordUser.get().sendMessage("You have been given the Player role for the tournament **" + findTournament.getName() + "**!");
+                    });
+        }
+        else {
+            discordUser
+                    .get()
+                    .removeRole(playerRole.get())
+                    .whenComplete((unused, throwable) -> {
+                       log.info("Removed player role from " + discordUser.get().getName());
+
+                       if(throwable != null)
+                           throwable.printStackTrace();
+
+                       discordUser.get().sendMessage("You no longer have the Player role for the tournament **" + findTournament.getName() + "**!");
                     });
         }
 
@@ -113,7 +122,7 @@ public class VerificationService {
 
                             // Add role to user
                             discordUser.get().addRole(role).whenComplete((unused, addRoleThrowable) -> {
-                                Log.info("Giving role " + findTeam.getName() + " to " + discordUser.get().getName());
+                                log.info("Giving role " + findTeam.getName() + " to " + discordUser.get().getName());
 
                                 if (addRoleThrowable != null)
                                     addRoleThrowable.printStackTrace();
@@ -158,7 +167,7 @@ public class VerificationService {
                         .get()
                         .getRoleById(findTeam.getDiscordId())
                         .ifPresent(role -> discordUser.get().addRole(role).whenComplete((unused, throwable) -> {
-                            Log.info("Giving role " + findTeam.getName() + " to " + discordUser.get().getName());
+                            log.info("Giving role " + findTeam.getName() + " to " + discordUser.get().getName());
 
                             if (throwable != null)
                                 throwable.printStackTrace();

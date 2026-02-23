@@ -1,7 +1,7 @@
 package com.github.wesley;
 
-import com.github.wesley.helper.Log;
 import com.github.wesley.helper.RegisterListener;
+import lombok.extern.slf4j.Slf4j;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.permission.PermissionType;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class DiscordConfiguration {
     private final ApplicationContext applicationContext;
@@ -49,11 +50,11 @@ public class DiscordConfiguration {
         // Register all listeners with RegisterListener marker interface
         for (RegisterListener listener : listeners.values()) {
             discordApi.addListener((GloballyAttachableListener) listener);
-            Log.info("Registered listener " + listener.getClass().getName());
+            log.info("Registered listener " + listener.getClass().getName());
         }
 
-        Log.info("Successfully initialized");
-        Log.info("Discord invite link: " + discordApi.createBotInvite(new PermissionsBuilder().setAllowed(PermissionType.ADMINISTRATOR).build()));
+        log.info("Successfully initialized");
+        log.info("Discord invite link: " + discordApi.createBotInvite(new PermissionsBuilder().setAllowed(PermissionType.ADMINISTRATOR).build()));
     }
 
     private void createSlashCommands() {

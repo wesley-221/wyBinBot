@@ -1,6 +1,5 @@
 package com.github.wesley.listeners.commands;
 
-import com.github.wesley.helper.Log;
 import com.github.wesley.models.Command;
 import com.github.wesley.models.tournament.Tournament;
 import com.github.wesley.models.tournament.TournamentStaff;
@@ -8,6 +7,7 @@ import com.github.wesley.models.tournament.TournamentTeamMember;
 import com.github.wesley.repositories.TournamentRepository;
 import com.github.wesley.repositories.TournamentStaffRepository;
 import com.github.wesley.repositories.TournamentTeamMemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class PlayerRolesCommand extends Command {
     private final TournamentRepository tournamentRepository;
@@ -105,7 +106,7 @@ public class PlayerRolesCommand extends Command {
 
                                 user.updateNickname(server.get(), staffMember.getUser().getUsername().trim());
 
-                                Log.info("Updated staff member " + staffMember.getUser().getUsername());
+                                log.info("Updated staff member " + staffMember.getUser().getUsername());
                             }).exceptionally(ExceptionLogger.get());
                 }
 

@@ -27,6 +27,10 @@ public class SetupStreamRoleCommand extends Command {
                 .getServer();
 
         if (server.isPresent()) {
+            // Check if there is a tournament with this server id
+            //
+
+
             List<Role> watcherRoleList = server
                     .get()
                     .getRolesByName(WATCHER_ROLE_NAME);
