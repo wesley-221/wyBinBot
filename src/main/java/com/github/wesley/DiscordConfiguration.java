@@ -18,6 +18,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_GET_ROLE_MESSAGE_OPTION;
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_MESSAGE_OPTION;
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_REMOVE_ROLE_MESSAGE_OPTION;
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_ROLE_NAME;
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_ROLE_NAME_OPTION;
+import static com.github.wesley.listeners.commands.SetupStreamRoleCommand.WATCHER_ROLE_OPTION;
+
 @Slf4j
 @Component
 public class DiscordConfiguration {
@@ -76,7 +83,14 @@ public class DiscordConfiguration {
                 .createGlobal(discordApi)
                 .join();
 
-        SlashCommand.with("setupstreamrole", "Creates a role that people can opt-in to to get a ping for when the livestream goes live.")
+        SlashCommand.with("setupstreamrole", "Creates a role that people can opt-in to to get a ping for when the livestream goes live.",
+                        List.of(
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, WATCHER_ROLE_NAME_OPTION, "OPTIONAL: The name of the role. Defaults to " + WATCHER_ROLE_NAME + ".", false),
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, WATCHER_MESSAGE_OPTION, "OPTIONAL: The message that will be displayed above the buttons.", false),
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, WATCHER_GET_ROLE_MESSAGE_OPTION, "OPTIONAL: The message that will be displayed on the Get role button.", false),
+                                SlashCommandOption.create(SlashCommandOptionType.STRING, WATCHER_REMOVE_ROLE_MESSAGE_OPTION, "OPTIONAL: The message that will be displayed on the Remove role button.", false),
+                                SlashCommandOption.create(SlashCommandOptionType.ROLE, WATCHER_ROLE_OPTION, "OPTIONAL: The role to give or remove. Only required when repurposing an existing role.", false)
+                        ))
                 .setEnabledInDms(false)
                 .setDefaultEnabledForPermissions(PermissionType.ADMINISTRATOR)
                 .createGlobal(discordApi)
